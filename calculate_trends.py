@@ -111,3 +111,34 @@ def generate_rsi( inp_df, inp_diff, inp_days ):
                
 
     return new_df[ labelList ]
+
+# Bollinger bands, computes bollinger band crossings
+# -1 indicates below bottom band
+#  1 indicates above top band
+#  0 indicates nothing happening
+def generate_bollinger_bands( inp_df, band_df, day_list , band_width=2.0, cl='Adj Close', bl='Close' ):
+    
+    new_df  = inp_df.copy()
+    ban_df  = band_df.copy()
+    my_days = day_list
+    
+    # Make sure we are working with a list
+    if ( not isinstance( day_list, list ) ):
+        my_days = [ day_list ]
+    mean_labels = []
+    std_labels  = []
+    b_labels    = []
+    
+    for day in my_days:
+        
+        mean_labels.append( bl+'_mean_'+str(day) )
+        std_labels .append( bl+'_std_' +str(day) )
+        b_labels   .append('Bollinger_'+str(day) )
+        
+        upperBand = ban_df[ mean_labels[-1] ] + band_width * ban_df[ std_labels[-1] ]
+        lowerBand = ban_df[ mean_labels[-1] ] - band_width * ban_df[ std_labels[-1] ]
+        
+        # 1 if above, 0 if below
+        ban_df[ b_labels[-1] ] = ( new_df[ cl ] - lowerBand ) / ( upperBand - lowerBand )
+
+    return ban_df[ b_labels ]
