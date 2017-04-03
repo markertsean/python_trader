@@ -155,10 +155,41 @@ def normalize_column( inp_df, column, maxVal=None, minVal=None ):
     if( min_value == None ):
         min_value = inp_df[column].min()
         
-    print new_column.head()
     new_column[column] = ( inp_df[ column ] - float(min_value) ) / ( max_value - min_value )
     new_column.ix[ new_column[column]<0, column ] = 0.0
     new_column.ix[ new_column[column]>1, column ] = 1.0
-    print new_column.head()
-    print ' '
+
     return new_column[column]
+
+# Generates percentage price difference over number of days
+def generate_deltas( inp_df, inp_days, cols = 'Adj Close' ):
+    
+    if ( inp_days < 1 ):
+        print 'Bad input days in generate_deltas: ', inp_days
+        sys.exit()
+        
+    use_df    = inp_df[::-1].copy()
+    labelList = []
+    
+    for day in range( 1, inp_days+1 ):
+        
+        labelList.append( 'Close_'+str(day) )
+        use_df[labelList[-1]] = 0.0
+        
+        use_df[labelList[-1]] = use_df[cols] / use_df[cols].shift(day) - 1
+
+    use_df = use_df[::-1]
+    return use_df[labelList]*100
+
+def generate_volatility( inp_roll, day_list ):
+
+    my_days = day_list
+    
+    # Make sure we are working with a list
+    if ( not isinstance( day_list, list ) ):
+        my_days = [ day_list ]
+
+    foo = inp_roll['Close_std_'+str(my_days[0])] / inp_roll['Close_mean_'+str(my_days[0])]
+    foo.fillna( foo.mean() )
+    foo.iloc[-my_days[0]:] = foo.mean()
+    return foo.to_frame( name='Volatility' )
