@@ -72,43 +72,40 @@ def generate_momentum_close( inp_df, inp_list ):
 
 
 # Relative strength index in measure of # days pos close vs num days neg close
-def generate_rsi( inp_df, inp_diff, inp_days ):
+def generate_rsi( inp_df, inp_days ):
     
-    new_df = inp_df[['Close']].copy()
-    new_df['Diff_co'] = inp_diff['Diff_co'].copy()
     
-    my_days = inp_days
+    # New_df contains differential of price from prev day
+    new_df = inp_df.ix[::-1,['Close','Adj Close']].copy()
+    new_df = new_df - new_df.shift(1)
+    new_df = new_df[::-1]
     
     # Make sure we are working with a list
+    my_days = inp_days
     if ( not isinstance( inp_days, list ) ):
         my_days = [ inp_days ]
-
     labelList = []
+    
     
     # Go through each day range to calc RSI
     for day in my_days:
         
         labelList.append('RSI_'+str(day))
         
-        posList = np.zeros( new_df.shape[0] )
-        negList = np.zeros( new_df.shape[0] ) + 1.e-6
-        
+        new_df[labelList[-1]] = 50.0
+                 
         # Need to handle each window of indexes individually
         for ind in range( 0, new_df.shape[0]-day ):
             
-            temp_df = new_df[ ind:ind+day ]
-            
-            posList[ind] = temp_df[ temp_df['Diff_co']>0 ][ 'Close' ].mean()
-            negList[ind] = temp_df[ temp_df['Diff_co']<0 ][ 'Close' ].mean()
+            new_df.ix[ ind, labelList[-1] ] = 100.0 * ( 1.0 - 1.0 / ( 1 + \
+                                              ( new_df.ix[ind:ind+day,'Close'][ new_df['Close']>0 ].mean()      ) / \
+                                              (-new_df.ix[ind:ind+day,'Close'][ new_df['Close']<0 ].mean()+1.e-6) ) )
+                
+        # Remove outliers
+        new_df[labelList[-1]].fillna( new_df[labelList[-1]].mean(),inplace=True)
+        new_df.ix[ new_df[labelList[-1]]< 1, labelList[-1]] = new_df[labelList[-1]].mean()
+        new_df.ix[ new_df[labelList[-1]]>99, labelList[-1]] = new_df[labelList[-1]].mean()
         
-            if ( posList[ind] != posList[ind] ):
-                posList[ind] = 0.0
-            if ( negList[ind] != negList[ind] ):
-                negList[ind] = 1.e-6
-
-        # First set value to up closes, then divide by downs
-        new_df[labelList[-1]] = 100.0 * ( 1.0 - 1.0/ ( 1 + posList/negList ) )
-               
 
     return new_df[ labelList ]
 
@@ -140,5 +137,28 @@ def generate_bollinger_bands( inp_df, band_df, day_list , band_width=2.0, cl='Ad
         
         # 1 if above, 0 if below
         ban_df[ b_labels[-1] ] = ( new_df[ cl ] - lowerBand ) / ( upperBand - lowerBand )
-
+        
+        ban_df.ix[ -day+1:, b_labels[-1] ] = 0.5
+        
     return ban_df[ b_labels ]
+
+# Normalize index
+def normalize_column( inp_df, column, maxVal=None, minVal=None ):
+    
+    new_column = inp_df.copy()
+    
+    max_value = maxVal
+    min_value = minVal
+    
+    if( max_value == None ):
+        max_value = inp_df[column].max()
+    if( min_value == None ):
+        min_value = inp_df[column].min()
+        
+    print new_column.head()
+    new_column[column] = ( inp_df[ column ] - float(min_value) ) / ( max_value - min_value )
+    new_column.ix[ new_column[column]<0, column ] = 0.0
+    new_column.ix[ new_column[column]>1, column ] = 1.0
+    print new_column.head()
+    print ' '
+    return new_column[column]
