@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm     as cm
 
 # Do cool correlation plot, with scatter and histograms
-def corr_plot( inp_df, exclude = None, focus = None ):
+def corr_plot( inp_df, exclude = None, focus = None, corr_method='spearman' ):
 
     
     col_list = inp_df.columns.values
@@ -30,7 +30,7 @@ def corr_plot( inp_df, exclude = None, focus = None ):
     
     df     = inp_df[col_list].copy()    
     
-    corr   = df.corr( method='spearman' )
+    corr   = df.corr( method=corr_method )
     corr_v = corr.as_matrix()
     
     # Mask the upper right so it can't be seen
