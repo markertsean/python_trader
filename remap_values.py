@@ -6,6 +6,7 @@ import matplotlib.mlab   as mlab
 
 from sklearn.utils import shuffle
 from sklearn.model_selection import KFold
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import r2_score
 from sklearn.svm import SVR
 from sklearn.decomposition import PCA
@@ -55,7 +56,7 @@ def normalize_column_sigma( inp_df, column, lower_bound=True, upper_bound=True, 
     return normalize_column( inp_df, column, minVal=new_column.min(), maxVal=new_column.max())
 
 # Normalize index
-def scale_column( inp_df, column, maxVal=None, minVal=None ):
+def scale_column( inp_df, column, maxVal=None, minVal=None, force_mean = None, force_std=None ):
     
     new_column = inp_df.copy()
     
@@ -473,6 +474,139 @@ def optimize_fit( clf, train_x, train_y, grid_params, nf=10, verbose=True ):
         mean_outcome = np.mean( accuracies )
         if ( verbose ):
             print "Clf %2i Mean Accuracy: %6.4f +/- %6.4f" % (clf_num,mean_outcome,np.std(accuracies))
+
+        # Figure out which clf is the best
+        if ( mean_outcome > best_clf_score ):
+            best_clf_index = clf_num
+            best_clf_score = mean_outcome
+            
+        clf_num = clf_num + 1
+    
+    # Fit and return best fit
+    ret_clf = clf_list[ best_clf_index ]
+    ret_clf.fit( train_x, train_y )
+    
+    if ( verbose ):
+        print ' '
+        print 'Using CLF with accuracy: %10.6f' % best_clf_score
+        print 'CLF params: ', ret_clf.get_params( deep=False )
+    
+    
+    return ret_clf
+
+
+def optimize_timeseries_reg( clf, train_x, train_y, grid_params, nf=10, verbose=True ):
+    
+    tss = TimeSeriesSplit( n_splits=nf )
+    
+    outcomes = []
+    clf_list = []
+    fold = 0
+    
+    # Generate indexes for training and testing data
+    for train_index, test_index in tss.split( train_x ):
+                
+        fold += 1
+        
+        # Generate training and testing data from input sets
+        x_train = train_x[train_index]
+        y_train = train_y[train_index]
+        x_test  = train_x[test_index]
+        y_test  = train_y[test_index]
+        
+        # 
+        
+        new_clf = GridSearchCV( clf, grid_params ) 
+        
+        new_clf.fit( x_train, y_train )
+        predictions = new_clf.predict( x_test )
+        accuracy = r2_score( y_test, predictions )
+        outcomes.append(accuracy)
+        
+        clf_list.append( clone( new_clf.best_estimator_ ) )
+        if ( verbose ):
+#            print("Fold {0} accuracy: {1}".format(fold, accuracy)), ', ', new_clf.best_score_, new_clf.best_params_
+            print "Fold %2i accuracy: %7.4f " % (fold, accuracy), ', ', '%7.4f '%new_clf.best_score_, new_clf.best_params_
+        
+        
+    # List of parameters
+    clf_params = []
+    for clf in clf_list:
+        clf_params.append( clf.get_params() )
+        
+    # Locate unique parameters
+    indexes = np.zeros( len(clf_params) ) + 1
+    new_list = []
+
+    # Loop over dictionaries, comparing each
+    for     i in range( 0  , len(clf_params) ):
+        for j in range( i+1, len(clf_params) ):
+
+            # If already flagged as duplicate, ignore
+            if ( indexes[j] == 0 ):
+                break
+
+            # Sort the dicts, so comparing the right elements
+            dict1 = sorted( clf_params[i].items() )
+            dict2 = sorted( clf_params[j].items() )
+
+            # Assume we are the same...
+            the_same = True
+
+            # Compare each dictionary item, if any don't match flag as not the same
+            for k in range( 0, len( dict1 ) ):
+                if ( dict1[k][1] != dict2[k][1] ):
+                    the_same=False
+                    break
+
+            # If no elements differ, flag the second as non-unique
+            if ( the_same ):
+                indexes[j] = 0
+                
+        # If first was unique, save it
+        if ( indexes[i]==1 ):
+            new_list.append( clf_list[i] )
+
+    clf_list = new_list
+    if ( verbose ):
+        print ' '
+        print 'Found ', len(new_list),' unique parameter combinations'
+        print ' '
+        
+        
+    best_clf_score = 0
+    best_clf_index = 0
+    best_clf_acc   = 0
+    
+    clf_num = 0
+
+
+    # Check each winning CLF against the group
+    # and pick the best of the best
+    for test_clf in clf_list:
+        
+        accuracies = []
+        fold       = 0
+        
+        for train_index, test_index in tss.split( train_x ):
+        
+            fold += 1
+
+            # Generate training and testing data from input sets
+            x_train = train_x[train_index]
+            y_train = train_y[train_index]
+            x_test  = train_x[test_index]
+            y_test  = train_y[test_index]
+        
+            test_clf.fit( x_train, y_train )
+
+            predictions = test_clf.predict( x_test )
+            accuracy = r2_score( y_test, predictions )
+            accuracies.append(accuracy)
+        
+        mean_outcome = accuracies[-1]
+        if ( verbose ):
+            print "Clf %2i Final Accuracy: %7.4f +/- %7.4f" % (clf_num,mean_outcome,np.std(accuracies))
 
         # Figure out which clf is the best
         if ( mean_outcome > best_clf_score ):

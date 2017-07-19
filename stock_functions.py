@@ -22,7 +22,7 @@ def generate_differentials( inp_df ):
 
 
 # Generate some rolling values of the data
-def generate_rolling_close( inp_df, inp_list ):
+def generate_rolling_close( inp_df, inp_list, onlyMean=False ):
     
     # Reverse things, list is reversed from direction of rolling
     new_df  = inp_df[::-1].copy()
@@ -33,17 +33,22 @@ def generate_rolling_close( inp_df, inp_list ):
         my_days = [ inp_list ]
 
     labelList = []
-        
+    meanList  = []
+    
     # Generate rolline mean and std for each length of days
     for day in my_days:
         
         labelList.append( 'close_mean_'+str(day) )
+        meanList .append(          labelList[-1] )
         labelList.append( 'close_std_' +str(day) )
         
         new_df[ labelList[-2] ] = new_df['close'].rolling(day).mean()
         new_df[ labelList[-1] ] = new_df['close'].rolling(day).std()
         
     new_df.fillna( 0, inplace=True )
+        
+    if ( onlyMean ):
+        return new_df.ix[::-1, meanList]
         
     return new_df.ix[ ::-1, labelList ]
 
