@@ -109,9 +109,9 @@ def generate_rsi( inp_df, inp_days ):
     return new_df[ labelList ]
 
 # Bollinger bands, computes bollinger band crossings
-# -1 indicates below bottom band
-#  1 indicates above top band
-#  0 indicates nothing happening
+#  0   indicates below bottom band
+#  1   indicates above top band
+#  0.5 indicates nothing happening
 def generate_bollinger_bands( inp_df, day_list, band_width=2.0 ):
     
     new_df  = inp_df[['close','open']].copy()
