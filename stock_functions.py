@@ -15,6 +15,36 @@ def get_frac_year_vars( inp_quote ):
     return pd.DataFrame( { 'frac_year_1':dy1, 'frac_year_2':dy2 } )
 
 
+# We expect some stocks to have strong seasonal trends,
+# If so, mark with categorical variables
+def get_seasonal_stocks( category, n_rows ):
+
+    category = category[:4].lower()
+
+    ind_list = ['aero','agri','chem','comp','cons',
+                'defe','educ','ener','ente','fina',
+                'food','heal','medi','tele','tran','wate']
+
+    long_list = ['aerospace','agriculture','chemical','computer',
+                 'construction','defense','education','energy',
+                 'entertainment','financial','food','healthcare',
+                 'media','telecommunications','transportation','water']
+
+    time_list = ['agri', 'cons', 'educ', 'ener', 'tran', 'wate' ]
+    # Ag, construction, education, energy, transportation, water should have time dependence
+
+    foo = pd.DataFrame()
+
+    for ind in time_list:
+        cat_col = ind + '_ind'
+        foo[cat_col] = np.zeros( n_rows, dtype=int )
+
+    if category in time_list:
+        foo[ category+'_ind' ] = 1
+
+    return foo
+
+
 # Generate measures of (close-open)/open, 
 #                        (high-low)/open,
 #                  (adj_close-open)/open, 
