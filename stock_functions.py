@@ -2,6 +2,19 @@ import pandas as pd
 import numpy  as np
 
 
+
+
+# To manage seasonality trends, return two variables to track time of year.
+# Date must be index
+def get_frac_year_vars( inp_quote ):
+
+    day_of_year = pd.to_datetime( inp_quote.index ).dayofyear
+    dy1 = (   day_of_year         % 367 ) / 366.
+    dy2 = ( ( day_of_year + 183 ) % 367 ) / 366.
+
+    return pd.DataFrame( { 'frac_year_1':dy1, 'frac_year_2':dy2 } )
+
+
 # Generate measures of (close-open)/open, 
 #                        (high-low)/open,
 #                  (adj_close-open)/open, 
