@@ -12,7 +12,7 @@ def get_frac_year_vars( inp_quote ):
     dy1 = (   day_of_year         % 367 ) / 366.
     dy2 = ( ( day_of_year + 183 ) % 367 ) / 366.
 
-    return pd.DataFrame( { 'frac_year_1':dy1, 'frac_year_2':dy2 } )
+    return pd.DataFrame( { 'frac_year_1':dy1, 'frac_year_2':dy2 }, index = inp_quote.index )
 
 
 # We expect some stocks to have strong seasonal trends,
