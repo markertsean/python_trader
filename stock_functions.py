@@ -30,8 +30,8 @@ def get_seasonal_stocks( category, n_rows ):
                  'entertainment','financial','food','healthcare',
                  'media','telecommunications','transportation','water']
 
-    time_list = ['agri', 'cons', 'educ', 'ener', 'tran', 'wate' ]
-    # Ag, construction, education, energy, transportation, water should have time dependence
+    time_list = ['agri', 'cons', 'ener', 'tran', 'wate' ]
+    # Ag, construction, energy, transportation, water should have time dependence
 
     foo = pd.DataFrame()
 
