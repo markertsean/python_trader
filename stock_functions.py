@@ -185,8 +185,8 @@ def generate_bollinger_bands( inp_df, day_list, band_width=2.0 ):
         upperBand = ban_df[ mean_labels[-1] ] + band_width * ban_df[ std_labels[-1] ]
         lowerBand = ban_df[ mean_labels[-1] ] - band_width * ban_df[ std_labels[-1] ]
         
-        # 1 if above, 0 if below
-        ban_df[ b_labels[-1] ] = ( new_df[ 'close' ] - lowerBand ) / ( upperBand - lowerBand )
+        # 1 if above, -1 if below
+        ban_df[ b_labels[-1] ] = 2*( new_df[ 'close' ] - lowerBand ) / ( upperBand - lowerBand ) - 1.
         
         ban_df.ix[ -day+1:, b_labels[-1] ] = 0.5
         
