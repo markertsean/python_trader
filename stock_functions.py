@@ -9,8 +9,8 @@ import numpy  as np
 def get_frac_year_vars( inp_quote ):
 
     day_of_year = pd.to_datetime( inp_quote.index ).dayofyear
-    dy1 = (   day_of_year         % 367 ) / 366.
-    dy2 = ( ( day_of_year + 183 ) % 367 ) / 366.
+    dy1 = 2*( (   day_of_year         % 367 ) / 366. ) - 1
+    dy2 = 2*( ( ( day_of_year + 183 ) % 367 ) / 366. ) - 1
 
     return pd.DataFrame( { 'frac_year_1':dy1, 'frac_year_2':dy2 }, index = inp_quote.index )
 

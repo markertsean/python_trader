@@ -95,7 +95,7 @@ def scale_column_sigma( inp_df, column, lower_bound=True, upper_bound=True, n_si
 
 
 
-
+# Imported function I use for z-scaling with outliers
 # Find z scale, shifting the distribution to zscale the underlying gaussian distribution, and ignore outliers
 def smart_scale( inp_df              ,  # Data frame
                  column              ,  # Column of interest
@@ -105,8 +105,13 @@ def smart_scale( inp_df              ,  # Data frame
                  tolerance   =   0.1 ,  # Tolerance for measuring convergence
                  max_steps   =  20   ,  # Maximum number of iterations
                  max_sigma   =   3.0 ,  # When done, number of stds to cut when calculating new distribution
-                 show_plot   = True  ): # Whether to show plots
-
+                 curve_boost = 500   ,  # Peak of gaussian modifier
+                 n_bins      =  31   ,  # Number of bins in the plot
+                 show_final  = False ,  # Only show the final plot
+                 show_plot   = False ,  # Whether to show plots
+                 return_coeff= False ,  # Returns coefficients for scaling
+                 just_coeff  = False ): # Only returns coefficients
+                
     converged  = False  # Whether the series has converged
     counter    = 0      # Tracks so doesn't loop infinitely
 
@@ -147,7 +152,7 @@ def smart_scale( inp_df              ,  # Data frame
 
         # Plot the change
         if ( show_plot ):
-            new_column.hist( bins=np.arange(low_lim, hi_lim, (hi_lim-low_lim)/20), normed=True )
+            new_column.hist( bins=np.arange(low_lim, hi_lim, (hi_lim-low_lim)/n_bins), normed=True )
             x = np.linspace( low_lim, hi_lim, 500 )
             plt.plot(x,mlab.normpdf(x, myMean, myStd))
             plt.xlim( low_lim, hi_lim )
@@ -181,16 +186,22 @@ def smart_scale( inp_df              ,  # Data frame
     
     
     # Plot the last thing
-    if ( show_plot ):
+    if ( show_plot or show_final ):
         low_lim = -7
         hi_lim  =  7
-        new_column.hist(bins=np.arange(low_lim, hi_lim, 0.5))#bins=10)
+        new_column.hist(bins=np.arange(low_lim, hi_lim, float(hi_lim-low_lim)/n_bins))#bins=10)
         x = np.linspace( low_lim, hi_lim, 500 )
-        plt.plot(x,mlab.normpdf(x, 0, 1)*500)#200000)
+        plt.plot(x,mlab.normpdf(x, 0, 1)*curve_boost)#200000)
         plt.xlim( low_lim, hi_lim )
         plt.title( 'Final: Mean: %7.2f Std: %7.2f' % (gauss_mean, gauss_std) )
         plt.show()
 
+    if just_coeff:
+        return [gauss_mean, gauss_std]
+        
+    if return_coeff:
+        return new_column, [gauss_mean,gauss_std]
+        
     return new_column
 
 
