@@ -1,7 +1,121 @@
 import pandas as pd
 import numpy  as np
 
+import pickle
 
+import remap_values as rv
+import read_quote   as rq
+
+
+
+cat_dict = {    
+                'aapl':'comp',    'acm' :'cons',    'amzn':'csmr',    'awk' :'wate',    'awr' :'wate',    'ba'  :'aero',    
+                'bac' :'fina',    'c'   :'fina',    'cat' :'cons',    'cop' :'ener',    'cvx' :'ener',    'dal' :'tran',    
+                'dd'  :'agri',    'farm':'agri',    'fdp' :'agri',    'gnc' :'agri',    'hes' :'ener',    'ibm' :'comp',    
+                'mas' :'cons',    'mcd' :'food',    'mon' :'agri',    'msex':'wate',    'msft':'comp',    'nflx':'ente',    
+                'sbux':'food',    'strl':'cons',    'tgt' :'csmr',    'tsla':'ener',    'ups' :'tran',    'xom' :'ener',    
+                'xpo' :'tran',    'vmc' :'cons'
+            }
+# Generate all the data, and scale it
+def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n ):
+
+    quote_df_list = []
+    
+    scale = {}
+    with open( 'data/scaling_dict.pkl', 'rb' ) as handle:
+        scale = pickle.load( handle )
+
+    # For each quote, read in and scale
+    for i in range( 0, len(inpList)):
+            fileName = 'quotes/'+inpList[i]+'.csv'
+            quote = rq.readQuote( fileName )
+
+            # Generate features
+            diffs = generate_differentials   ( quote          ).drop('diff_v',axis=1)
+            moms  = generate_momentum_close  ( quote,  mom_n  )
+            rsis  = generate_rsi             ( quote,  rsi_n  )
+            bands = generate_bollinger_bands ( quote, band_n  )
+            rolls = generate_rolling_close   ( quote, roll_n  , onlyMean=True )
+            dates = get_frac_year_vars       ( quote          )
+    
+            # Seasonality in some stocks
+            categ = get_seasonal_stocks      ( cat_dict[inpList[i]], quote.shape[0] )
+            categ.index = quote.index
+    
+            # Log of current price minus 1.5, gives proxy for price percentage movement
+            l_cp_m = np.log10( quote['close'] )
+
+            
+            # The target variables are stored in the data frame
+            # Fractional component increased/decreased next day
+            for i in roll_n:
+                rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) / rolls['close_mean_'+str(i)] - 1 )
+            rolls = rolls.replace( [np.inf, -np.inf], np.nan )
+
+            # Perform scaling
+            diffs['diff_co'] = (           diffs['diff_co']   - scale[    'diff_co_mean'] ) / scale[    'diff_co_std']
+            diffs['diff_hl'] = ( np.log10( diffs['diff_hl'] ) - scale['log_diff_hl_mean'] ) / scale['log_diff_hl_std']
+            
+            # Scale momentum
+            for n in mom_n:
+                moms  [ 'momentum_'+str(n)] = ( moms[  'momentum_'+str(n)] - scale['momentum_mean'] ) / scale[ 'momentum_std']
+            
+            # Scale relative strength index
+            for n in rsi_n:
+                rsis  [      'rsi_'+str(n)] = ( rsis[       'rsi_'+str(n)] - scale[     'rsi_mean'] ) / scale[     'rsi_std']
+
+            # Scale bollinger bands
+            for n in band_n:
+                bands ['bollinger_'+str(n)] = ( bands['bollinger_'+str(n)] - scale[    'band_mean'] ) / scale[     'band_std']
+                
+            # Combine all the data frames
+            var_df_list = [ diffs, moms, rsis, bands, dates, categ, l_cp_m, rolls ]
+            all_variables = reduce( lambda left,right: left.join(right,how='inner'), var_df_list )
+            
+            quote_df_list.append( all_variables )
+                        
+    return pd.concat( quote_df_list )
+
+
+
+def gen_data( inpList, roll_n, mom_n, rsi_n, band_n ):
+
+    quote_df_list = []
+    
+    for i in range( 0, len(inpList)):
+            fileName = 'quotes/'+inpList[i]+'.csv'
+            quote = rq.readQuote( fileName )
+
+            # Generate features
+            diffs = generate_differentials   ( quote            ).drop('diff_v',axis=1)
+            moms  = generate_momentum_close  ( quote, mom_nums  )
+            rsis  = generate_rsi             ( quote, rsi_nums  )
+            bands = generate_bollinger_bands ( quote, band_nums )
+            rolls = generate_rolling_close   ( quote, roll_nums, onlyMean=True )
+            dates = get_frac_year_vars       ( quote            )
+    
+            # Seasonality in some stocks
+            categ = get_seasonal_stocks      ( inpList[i], quote.shape[0] )
+            categ.index = quote.index
+    
+            # Log of current price minus 1.5, gives proxy for price percentage movement
+            l_cp_m = np.log10( quote['close'] )
+
+            
+            # The target variables are stored in the data frame
+            # Fractional component increased/decreased next day
+            for i in roll_nums:
+                rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) / rolls['close_mean_'+str(i)] - 1 )
+            rolls = rolls.replace( [np.inf, -np.inf], np.nan )
+
+            # Combine all the data frames
+            var_df_list = [ diffs, moms, rsis, bands, dates, categ, l_cp_m, rolls ]
+            all_variables = reduce( lambda left,right: left.join(right,how='inner'), var_df_list )
+            
+            quote_df_list.append( all_variables )
+            
+    # Combine all the data
+    return pd.concat( quote_df_list )
 
 
 # To manage seasonality trends, return two variables to track time of year.
