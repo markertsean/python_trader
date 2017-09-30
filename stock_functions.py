@@ -43,7 +43,7 @@ def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n ):
             categ.index = quote.index
     
             # Log of current price minus 1.5, gives proxy for price percentage movement
-            l_cp_m = np.log10( quote['close'] )
+            l_cp_m = ( np.log10( quote['close'] )-1.6 ) / 0.5
 
             
             # The target variables are stored in the data frame
@@ -52,6 +52,7 @@ def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n ):
                 rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) / rolls['close_mean_'+str(i)] - 1 )
             rolls = rolls.replace( [np.inf, -np.inf], np.nan )
 
+            
             # Perform scaling
             diffs['diff_co'] = (           diffs['diff_co']   - scale[    'diff_co_mean'] ) / scale[    'diff_co_std']
             diffs['diff_hl'] = ( np.log10( diffs['diff_hl'] ) - scale['log_diff_hl_mean'] ) / scale['log_diff_hl_std']
