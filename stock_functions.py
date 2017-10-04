@@ -1,12 +1,62 @@
 import pandas as pd
 import numpy  as np
 
+from sklearn.decomposition  import PCA
+
+
 import pickle
 
 import remap_values as rv
 import read_quote   as rq
 
 
+
+# Generates a frame containing PCA of a few attributes
+def gen_pca_attributes( inp_df, mom_nums, rsi_nums, band_nums, n_mom=2, n_rsi=1, n_ban=2, print_ratio=False ):
+
+    scaled_df = inp_df.copy()
+    
+    mom_list = []
+    rsi_list = []
+    band_list= []
+    
+    for i in range( 0, len( mom_nums ) ):
+        mom_list.append( 'momentum_'+str(mom_nums[i]) )
+    for i in range( 0, len( rsi_nums ) ):
+        rsi_list.append( 'rsi_'+str(rsi_nums[i]) )
+    for i in range( 0, len( band_nums ) ):
+        band_list.append( 'bollinger_'+str(band_nums[i]) )
+
+    for col in (band_list+rsi_list+mom_list):
+        scaled_df[col] = ( scaled_df[col] - scaled_df[col].mean() ) / scaled_df[col].std() 
+    
+    mom_pca = PCA( n_components=n_mom )
+    rsi_pca = PCA( n_components=n_rsi )
+    ban_pca = PCA( n_components=n_ban )
+
+    mom_pca.fit( scaled_df[ mom_list] )
+    rsi_pca.fit( scaled_df[ rsi_list] )
+    ban_pca.fit( scaled_df[band_list] )
+
+    if (print_ratio):
+        print 'Momentum: ', mom_pca.explained_variance_ratio_
+        print 'RSI     : ', rsi_pca.explained_variance_ratio_
+        print 'Bands   : ', ban_pca.explained_variance_ratio_
+
+    mom_cols = mom_pca.transform( scaled_df[ mom_list ] )
+    rsi_cols = rsi_pca.transform( scaled_df[ rsi_list ] )
+    ban_cols = ban_pca.transform( scaled_df[band_list ] )
+
+    for i in range( 0, mom_cols.shape[1] ):
+        scaled_df['momentum_pca_'+str(i)] = mom_cols[:,i]
+    for i in range( 0, rsi_cols.shape[1] ):
+        scaled_df[     'rsi_pca_'+str(i)] = rsi_cols[:,i]
+    for i in range( 0, ban_cols.shape[1] ):
+        scaled_df[    'band_pca_'+str(i)] = ban_cols[:,i]
+
+    scaled_df = scaled_df.drop( mom_list+rsi_list+band_list, axis=1 )
+    
+    return scaled_df
 
 cat_dict = {    
                 'aapl':'comp',    'acm' :'cons',    'amzn':'csmr',    'awk' :'wate',    'awr' :'wate',    'ba'  :'aero',    
