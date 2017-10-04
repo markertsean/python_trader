@@ -17,7 +17,7 @@ cat_dict = {
                 'xpo' :'tran',    'vmc' :'cons'
             }
 # Generate all the data, and scale it
-def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n ):
+def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n, close_percentage=True ):
 
     quote_df_list = []
     
@@ -49,7 +49,10 @@ def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n ):
             # The target variables are stored in the data frame
             # Fractional component increased/decreased next day
             for i in roll_n:
-                rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) / rolls['close_mean_'+str(i)] - 1 )
+                if ( close_percentage ):
+                    rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) / rolls['close_mean_'+str(i)] - 1 )
+                else:
+                    rolls['close_mean_'+str(i)] = ( rolls['close_mean_'+str(i)].shift(i) - rolls['close_mean_'+str(i)] )
             rolls = rolls.replace( [np.inf, -np.inf], np.nan )
 
             
