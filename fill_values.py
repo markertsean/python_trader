@@ -7,6 +7,8 @@ import numpy  as np
 # and custom cubic spline interpolation
 def pred_from_mean( inp_close_df, roll_nums ):
     
+    n_s = 3.
+    
     # Stores values predicted from mean
     my_df = inp_close_df['close'].to_frame()
     
@@ -95,6 +97,10 @@ def pred_from_mean( inp_close_df, roll_nums ):
 
             my_df['pred_'+chunk_str+'_day_'+str(chunk_days) ] =  2 * chunk_mean - my_df['pred_'+chunk_str+'_day_1' ]
 
+# These were large errors, lets try to smooth them a little
+            my_df['pred_'+chunk_str+'_day_1' ] =  ( my_df['pred_'+chunk_str+'_day_1' ] + (n_s-1)*chunk_mean ) / n_s
+            my_df['pred_'+chunk_str+'_day_'+str(chunk_days) ] = ( my_df['pred_'+chunk_str+'_day_'+str(chunk_days) ] + (n_s-1)*chunk_mean ) / n_s
+            
             # Find values not covered
             predicted_list = [1,mid,chunk_days]
             need_to_predict = [x for x in range(1,chunk_days) if x not in predicted_list]
@@ -124,6 +130,9 @@ def pred_from_mean( inp_close_df, roll_nums ):
             delta = inp_close_df['pred_mean_'+chunk_str] - my_df['pred_'+prev_str+'_day_'+str(diff[i-1])]
             my_df['pred_'+chunk_str+'_day_1'] = inp_close_df['pred_mean_'+chunk_str] - delta/2.
             my_df['pred_'+chunk_str+'_day_2'] = inp_close_df['pred_mean_'+chunk_str] + delta/2.
+            
+            my_df['pred_'+chunk_str+'_day_1'] = (my_df['pred_'+chunk_str+'_day_1']+(n_s-1)*chunk_mean)/n_s
+            my_df['pred_'+chunk_str+'_day_2'] = (my_df['pred_'+chunk_str+'_day_2']+(n_s-1)*chunk_mean)/n_s
 
             
     return my_df.reindex_axis(sorted(my_df.columns), axis=1)
