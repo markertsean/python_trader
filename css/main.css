@@ -199,6 +199,7 @@ ul {
 }
 
 #sidebar1 {
+        position: fixed;
 	width: 200px;
 	float: left;
 	padding: 0;
