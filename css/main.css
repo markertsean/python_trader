@@ -199,13 +199,13 @@ ul {
 }
 
 #sidebar1 {
-        font-size: 1.3em;
+        font-size: 1.5em;
         position: fixed;
 	width: 200px;
 	float: left;
 	padding: 0;
         height: 100%;
-        border: 1px solid #afafaf;
+        border: 3px solid #000000;
 /*
         margin-left: 20px;
 */
