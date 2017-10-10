@@ -199,11 +199,16 @@ ul {
 }
 
 #sidebar1 {
+        font-size: 1.3em;
         position: fixed;
 	width: 200px;
 	float: left;
 	padding: 0;
         height: 100%;
+        border: 1px solid #afafaf;
+/*
+        margin-left: 20px;
+*/
 }
 
 #sidebar2 {
