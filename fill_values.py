@@ -155,6 +155,34 @@ def pred_from_mean( inp_close_df, roll_nums ):
     for i in range( 1, len(my_df.columns.values) ):
         my_df.columns.values[i] = 'pred_'+str(i)
             
+    # Going to fill not smoothed values (null) with extrapolated data
+    # We don't need high accuracy-these are going to be very heavily weighted 
+    #  with a large error
+    for col in my_df.columns.values[1:]:
+        null_or_not = my_df[col].isnull()
+
+        # Only do those where we have nulls at recent dates
+        if ( null_or_not.sum() > 1 ):
+
+            # Find most recent data index
+            for index in range( 1, my_df.shape[0] ):
+                if ( (null_or_not[index-1] == True ) and
+                     (null_or_not[index  ] == False) ):
+                    break
+
+            data_index = range( index, index+5 ) # Data to use for extrapolation
+            pred_index = range(     0, index   ) # Data to extrapolate
+
+            data_values = my_df[col].values[ data_index ]
+
+            # Predict using simple quadratic extrapolation
+            z            = np.polyfit( data_index, data_values, 2 )
+            quad_extrap  = np.poly1d ( z )
+
+            pred_values  = quad_extrap( pred_index )
+
+            my_df[col].values[pred_index] = pred_values
+            
     return my_df
 
 
