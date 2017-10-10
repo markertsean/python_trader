@@ -8,6 +8,7 @@ import numpy  as np
 def pred_from_mean( inp_close_df, roll_nums ):
     
     n_s = 3.
+    pred_list = [] # For sorting the labels
     
     # Stores values predicted from mean
     my_df = inp_close_df['close'].to_frame()
@@ -29,6 +30,8 @@ def pred_from_mean( inp_close_df, roll_nums ):
 
     my_df['pred_'+roll_str+'_day_'+roll_str ] =  2 * inp_close_df['pred_mean_'+roll_str ] - my_df['close']
 
+    pred_list = ['pred_'+roll_str+'_day_1','pred_'+str( rolls[0] )+'_day_'+mid,'pred_'+roll_str+'_day_'+roll_str]
+    
     # Find values not covered
     predicted_list = [1,(rolls[0]+1)/2,rolls[0]]
     need_to_predict = [x for x in range(1,rolls[0]+1) if x not in predicted_list]
@@ -56,8 +59,11 @@ def pred_from_mean( inp_close_df, roll_nums ):
         # Save the interpolated arrays
         for i in range( 0, len(need_to_predict) ):
             my_df['pred_'+roll_str+'_day_'+str(need_to_predict[i])] = preds[:,i]
+            pred_list.append('pred_'+roll_str+'_day_'+str(need_to_predict[i]))
 
-        
+    # Should sort the prediction list, so predicted days in order
+    pred_list = sorted( pred_list )
+    
     # Need to take mean chunks, and calculate amount in later chunk
     # In later chunck, midpoint will be the mean value, interpolate
     #  from previous mean value centerpoint to find chunck x1,
@@ -84,6 +90,8 @@ def pred_from_mean( inp_close_df, roll_nums ):
         mid      = (chunk_days+1)/2
         mid_str  = str(mid)
         
+        new_col_list = []
+        
         if ( (chunk_days % 2) == 1 ):
 
 
@@ -105,6 +113,8 @@ def pred_from_mean( inp_close_df, roll_nums ):
             predicted_list = [1,mid,chunk_days]
             need_to_predict = [x for x in range(1,chunk_days) if x not in predicted_list]
             
+            new_col_list = ['pred_'+chunk_str+'_day_1','pred_'+chunk_str+'_day_'+str(chunk_days),'pred_'+chunk_str+'_day_'+mid_str]
+            
             # Find values not covered
             if ( len(need_to_predict) > 0 ):
 
@@ -123,7 +133,7 @@ def pred_from_mean( inp_close_df, roll_nums ):
                 # Save the interpolated arrays
                 for i in range( 0, len(need_to_predict) ):
                     my_df['pred_'+chunk_str+'_day_'+str(need_to_predict[i])] = preds[:,i]
-                
+                    new_col_list.append('pred_'+chunk_str+'_day_'+str(need_to_predict[i]))
         # Even
         else:
             # Use mean difference, and difference from chunk to last day
@@ -134,8 +144,18 @@ def pred_from_mean( inp_close_df, roll_nums ):
             my_df['pred_'+chunk_str+'_day_1'] = (my_df['pred_'+chunk_str+'_day_1']+(n_s-1)*chunk_mean)/n_s
             my_df['pred_'+chunk_str+'_day_2'] = (my_df['pred_'+chunk_str+'_day_2']+(n_s-1)*chunk_mean)/n_s
 
+            new_col_list = ['pred_'+chunk_str+'_day_1','pred_'+chunk_str+'_day_2']
+
+        pred_list = pred_list + sorted( new_col_list )
+        
+    # This will institute proper order of predictions
+    my_df = my_df[ ['close']+pred_list[1:] ]
+    
+    # Rewrite so just ordered predictions
+    for i in range( 1, len(my_df.columns.values) ):
+        my_df.columns.values[i] = 'pred_'+str(i)
             
-    return my_df.reindex_axis(sorted(my_df.columns), axis=1)
+    return my_df
 
 
 
