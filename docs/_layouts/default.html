@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>{{ page.title }}</title>
+			<!-- link to main stylesheet -->
+			<link rel="stylesheet" type="text/css" href="/css/main.css">
+		</head>
+
+
+  <body>
+    <div id="bg">
+      <div id="outer">
+
+<!-- Header-->
+	<div id="header">
+
+	  <div id="logo">
+	    <h1> <a href="#">Sean Markert</a> </h1>
+	  </div>
+
+<!-- NAV BAR -->
+	  <div id="nav">
+	    <ul>
+	      <li class="first active">
+		<a href="/projects">Projects</a>
+	      </li>
+              <li>
+		<a href="/teaching">Teaching</a>
+	      </li>
+	      <li>
+		<a href="/code">Code</a>
+	      </li>
+	      <li>
+		<a href="/research">Research</a>
+	      </li>
+	      <li>
+		<a href="/">Home</a>
+	      </li>
+	    </ul>
+	    <br class="clear" />
+	  </div>
+
+	</div>
+<!-- /header -->
+
+
+	<div id="main">
+
+<!-- Right hand side bar-->
+	  <div id="sidebar1">
+
+	    <ul>
+	      <li class="first active">
+		<a href="/projects">Projects</a>
+	      </li>
+              <li>
+		<a href="/teaching">Teaching</a>
+	      </li>
+	      <li>
+		<a href="/code">Code</a>
+	      </li>
+	      <li>
+		<a href="/research">Research</a>
+	      </li>
+	      <li>
+		<a href="/">Home</a>
+	      </li>
+	    </ul>
+
+	  </div>
+<!-- /side bar-->
+
+
+<!-- Center Column -->
+	  <div id="content">
+	    <div id="box1">
+
+              {{content}}
+
+	    </div>
+	    <br class="clear" />
+	  </div>
+<!-- /Center Column -->
+
+  </body>
+</html>
