@@ -26,12 +26,12 @@ a:hover {
 }
 
 th, td {
-    padding: 20px;
+    padding: 10px;
 }
 
 table#t01 {
     width: 100%;
-    border-spacing: 30px;
+    border-spacing: 10px;
 }
 
 strong {
