@@ -26,11 +26,11 @@ a:hover {
 }
 
 th, td {
-    padding: 15px;
+    padding: 20px;
 }
 
 table {
-    border-spacing: 10px;
+    border-spacing: 30px;
 }
 
 strong {
@@ -206,7 +206,7 @@ ul {
 }
 
 #sidebar1 {
-        font-size: 1.5em;
+        font-size: 1.4em;
         position: fixed;
 	width: 200px;
 	float: left;
