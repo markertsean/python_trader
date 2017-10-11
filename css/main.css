@@ -205,10 +205,9 @@ ul {
 	float: left;
 	padding: 0;
         height: 100%;
-        border: 3px solid #000000;
-/*
         margin-left: 20px;
-*/
+        margin-top:  10px;
+
 }
 
 #sidebar2 {
