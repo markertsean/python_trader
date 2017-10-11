@@ -25,6 +25,13 @@ a:hover {
 	text-decoration: none;
 }
 
+th, td {
+    padding: 15px;
+}
+
+table {
+    border-spacing: 10px;
+}
 
 strong {
 	color: #cfcfcf;
