@@ -1,0 +1,66 @@
+---
+layout: default
+title: Data Cleaning
+---
+<div class="blurb">
+	      <h2>Data Selection and Cleaning</h2>
+	      <p>
+                The first step in any process is to have a look at 
+                the data and clean any null or incomplete
+                values. We obtained all our data from the the 
+                <a href="http://www.nasdaq.com/quotes/historical-quotes.aspx">
+                NASDAQ historical quote page</a>. This provides 
+                up to 10 years of historical data of stocks, including
+                closing price, open price, daily high, daily low, and
+                volume of stocks traded. Much of our analysis focuses on
+                the close price and volume.
+	      </p>
+              <p>
+                We gathered data from 32 different companies from a variety of
+                industries. The variety of companies is important, as each
+                may contain seasonal trends, and these may be seasonality by 
+                industry. The company codes we used for our analysis was:
+                AAPL, ACM, AMZN, AWK, AWR, BA, BAC, C, CAT, COP, CVX, DAL,
+                DD, FARM, FDP, GNC, HES, IBM, MAS, MCD, MON, MSEX, MSFT, NFLX,
+                SBUX, STRL, TGT, TSLA, UPS, XOM, XPO, and VMC. The selection was 
+                somewhat arbitrary, but includes both high and low priced
+                stocks, and a mixture of large and small companies.
+              </p>
+              <p>
+                Fortunately, a check of all this data provides no null values.
+                This makes the job easy, but we can't ignore the possibility there
+                won't be null values in the future, especially given there are 
+                times a company will be taken off the trading market. In those
+                conditions we could interpolate the price of the stock between
+                dates, however this is not an accurate representation of how 
+                the stock would be viewed on the market. It is better to maintain
+                the stock at the last closing price, rather than give it an 
+                artificial value, and fill the volume with 0 during these times.
+                We thus will want to forward fill over null values. Ordinarily 
+                this is followed by a backfill in this kind of situation, but 
+                those values would exist before any real data, and not included
+                in the quote. These values should not exist, and it would be worth
+                letting an error arise to alert us of the issue.
+              </p>
+              <p>
+                With any null values filled, it is now important to consider 
+                price splitting. This is when a company chooses to adjust the
+                price of a stock, by changing the number of shares available.
+                If there are 200 shares currently priced at $10 each (total $2000), 
+                a company may choose to double the number of shares, so each share 
+                becomes two, and the price is halved (400 shares x $5 = $2000 
+                preserving the total value). We thus check for price jumps of 2:1,
+                3:1, 4:1, 5:1, and more odd fractions (like 2:3), and modulate the
+                prices and volume to match the ratio it split to, so everything is
+                in terms of the most recent number of shares on the market.
+              </p>
+              <p>
+                These steps were relatively straightforward and require very little 
+                computation time, it can't get much easier for data cleaning than this.
+                In the next section I will discuss the features I used.
+              </p>
+              <p>
+                <a href="features/">Next Section: Feature Selection</a>
+              </p>
+
+</div><!-- /.blurb -->
