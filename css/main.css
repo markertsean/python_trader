@@ -26,12 +26,12 @@ a:hover {
 }
 
 th, td {
-    padding: 10px;
+    padding: 5px;
 }
 
 table#t01 {
     width: 100%;
-    border-spacing: 10px;
+    border-spacing: 5px;
 }
 
 strong {
@@ -213,8 +213,9 @@ ul {
 	float: left;
 	padding: 0;
         height: 100%;
+/*
         margin-left: 5px;
-
+*/
 }
 
 #sidebar2 {
