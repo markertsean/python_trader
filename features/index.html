@@ -1,0 +1,57 @@
+---
+layout: default
+title: Stock Forecasting
+---
+<div class="blurb">
+	      <h2>Feature Selection</h2>
+	      <p>
+                There are many features that are used in forecasting.
+	      </p>
+
+              <p>
+                <b>Bollinger Bands</b>: These utilize the rolling means of
+                the closing price of a stock. Using the closing price
+                averages over N previous days, the Upper (Lower) Bollinger
+                Band is given by the + (-) 2 sigma standard deviation around
+                the mean. The price of a stock within this window is used to
+                determine when to buy or sell.
+              </p>
+
+              <p>
+                <b>Momentum</b>: The momentum of a stock is given by taking 
+                the price at the current day, and subtracting off some
+                day in the past.
+              </p>
+
+              <p>
+                <b>Relative Strength Index</b>: This is an indicator that 
+                is dependent on the average amount of positive returns in an 
+                N day period, and the average negative return.
+              </p>
+
+              <p>
+                We use each of these traditional forecasting features, using 
+                different windows to track both long and short term trends.
+                Windows range from 5 to 30 days for most features. We add
+                a few additional features, outside of these three. We include
+                the difference in high/low and close/open prices as a measure 
+                of volatility. We also include two variables to track the time
+                of year, for industries that have seasonal variations. Finally
+                we include a log price, as variations in the price may be
+                larger/smaller with more/less expensive stocks, and there are
+                a wide range of prices.
+              </p>
+
+              <p>
+                Finally, we generate our target variables. Our targets are
+                the predicted rolling means, as the relative fraction of the 
+                current rolling means. This is done to reduce the noise, as
+                day by day prediction is impossible for stock prices, but
+                predicting trends is within the bounds of reason. 
+              </p>
+
+              <p>
+                <a href="/scaling">Next up: Scaling the data</a>
+              </p>
+
+</div><!-- /.blurb -->
