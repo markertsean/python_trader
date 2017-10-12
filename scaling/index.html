@@ -14,6 +14,7 @@ title: Stock Forecasting
 
 
               <!-- diff_co -->
+              <h3>diff_co</h3>
 
               <p>
                 We will start with the percent difference between the closing and
@@ -35,6 +36,7 @@ title: Stock Forecasting
               </figure>
 
               <p>
+                <br>
                 With all these different distributions, it is useful to look at the
                 combination of these distribution, as we do in Figure 2. We wind up with
                 a normal distribution, with the bulk of the distribution falling within
@@ -50,9 +52,27 @@ title: Stock Forecasting
                 </figcaption>
               </figure>
 
+              <p>
+                <br>
+                The distribution of all the diff_co values show a clear normal
+                distribution. We perfom a z-scaling on the normally distributed
+                data, as seen in Figure 3. The scaling performed is a custom scheme,
+                where we omit data points on the furthest extreme, and renormalize.
+                This is repeated until the new fits perform minimal change in the 
+                distribtuion.
+              </p>
 
+              <figure>
+                <img src="/images/exploration/diff_co_short_scaled_sum.png" 
+                     alt="Rescaled difference between close and open" 
+                     width="50%">
+                <figcaption>
+                  Figure 3 - Z-scaled distribution of diff_co, for all quotes.
+                </figcaption>
+              </figure>
 
               <p>
+                <br>
                 <a href="/pca">Next up: Principle Component Analysis</a>
               </p>
 
