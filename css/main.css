@@ -357,6 +357,7 @@ figure img {
 
 figcaption {
     display: table-caption;
+    width: 20%;
     caption-side: bottom;
     padding: 0 5px 5px;
 }​
