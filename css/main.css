@@ -344,6 +344,10 @@ body {
 #nav ul li {
 	float: right;
 }
+
+figure {
+    width: 70%;
+}
 /*
 div.figure {
   float: left;
