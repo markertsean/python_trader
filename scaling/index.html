@@ -1,0 +1,70 @@
+---
+layout: default
+title: Stock Forecasting
+---
+<div class="blurb">
+	      <h2>Feature Scaling</h2>
+	      <p>
+                It is always useful to visualize and explore the data
+                before performing any modeling. We combine the exploration
+                and data scaling in this section. Scaling is very important 
+                for many machine learning algorithms, so we will scale all
+                of our continuous variables.
+	      </p>
+
+
+              <!-- diff_co -->
+
+              <p>
+                We will start with the percent difference between the closing and
+                opening price for the day, denoted diff_co. We display the histogram 
+                of this distribution in Figure 1. Examining a few cases, we see
+                FDP is almost entirely contained within &plusmn 5%, wheras BA is
+                spread to within a &plusmn 10% range.
+              </p>
+
+              <figure>
+                <img src="images/exploration/diff_co_short.png" 
+                     alt="Percent difference between close and open" 
+                     width="50%">
+                <figcaption>
+                  Figure 1 - Distribution of percent difference between the daily close 
+                  and open prices for 15 of our samples. There are clear differences
+                  in diff_co distribution for different stocks.
+                </figcaption>
+              </figure>
+
+              <p>
+                With all these different distributions, it is useful to look at the
+                combination of these distribution, as we do in Figure 2. We wind up with
+                a normal distribution, with the bulk of the distribution falling within
+                that &plusmn 5%.
+              </p>
+
+              <figure>
+                <img src="images/exploration/diff_co_short_sum.png" 
+                     alt="Bulk difference between close and open" 
+                     width="50%">
+                <figcaption>
+                  Figure 2 - Histogram as in Figure 1, but combined for all quotes.
+                </figcaption>
+              </figure>
+
+
+
+              <p>
+                <a href="/pca">Next up: Principle Component Analysis</a>
+              </p>
+
+<!--
+              <figure>
+                <img src="images/" 
+                     alt="" 
+                     width="50%">
+                <figcaption>
+                  Figure - 
+                </figcaption>
+              </figure>
+-->
+
+</div><!-- /.blurb -->

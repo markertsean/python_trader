@@ -344,11 +344,11 @@ body {
 #nav ul li {
 	float: right;
 }
-
+/*
 div.figure {
   float: left;
   width: 700;
-/*
+
   width: 30%;
   text-align: left;
   font-style: italic;
@@ -357,7 +357,7 @@ div.figure {
   margin: 0.5em;
   padding: 0.5em;
   border: thin silver solid;
-*/
+
 }
 
 div.figure_caption {
@@ -367,10 +367,11 @@ div.figure_caption {
   font-style: italic;
   font-size: smaller;
   text-indent: 30;
-/*
+
   width: 60%;
   margin: 0.5em;
   padding: 0.5em;
   border: thin silver solid;
-*/
+
 }
+*/
