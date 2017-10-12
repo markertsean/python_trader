@@ -346,7 +346,7 @@ body {
 }
 
 figure {
-   padding: 5px;
+   padding: 15px;
    display: table;
 }
 
@@ -357,7 +357,6 @@ figure img {
 
 figcaption {
     display: table-caption;
-
     caption-side: bottom;
     padding: 0 5px 5px;
 }​

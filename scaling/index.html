@@ -9,7 +9,17 @@ title: Stock Forecasting
                 before performing any modeling. We combine the exploration
                 and data scaling in this section. Scaling is very important 
                 for many machine learning algorithms, so we will scale all
-                of our continuous variables.
+                of our continuous variables. 
+              </p>
+
+              <p>
+                I focus in this section primarily on the distributions of the features,
+                rather than correlation or scatter plots between trends. Quote information
+                is incredibally noisy, and attempts at these lead to one of two things:
+                either plots showing little to no correlation due to daily noise, or 
+                apparent high correlation, as the market is always tending towards an
+                overall increase, and all trends point this way. We will save examination
+                of trends for the analysis section.
 	      </p>
 
 
@@ -68,17 +78,51 @@ title: Stock Forecasting
                 </figcaption>
               </figure>
 
+
+              <!-- diff_hl -->
+              <h3>diff_hl</h3>
+
+              <p>
+                Similar to the analysis we performed for the difference between
+                close and opening prices, we generated a feature for the percent
+                difference between daily high and lows, diff_hl. The distribution of 
+                values is exclusively negative by design, and skewed towards higher
+                diff_hl, as can be seen in Figure 4. We perform z-scaling
+                on the diff_hl, as can be seen in Figure 5.
+              </p>
+
+              <figure>
+                <img src="/python_trader/images/exploration/diff_hl_short_sum.jpg" 
+                     alt="Difference between daily highs and lows for all quotes">
+                <figcaption>
+                  Figure 4 - Histogram of the cumulative difference between daily high and 
+                  low prices, for all quotes. The distribution is slightly skewed towards 
+                  larger values.
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/exploration/diff_hl_short_scaled_sum.jpg"
+                     alt="Z-scaling of diff_hl">
+                <figcaption>
+                  Figure 5 - Z-scaled distribtuion of diff_hl. 
+                </figcaption>
+              </figure>
+
+
+              
+              <!-- momentum -->
+
+
               <p>
                 <br>
-Butts
                 <a href="/pca">Next up: Principle Component Analysis</a>
               </p>
 
 <!--
               <figure>
-                <img src="images/" 
-                     alt="" 
-                     width="50%">
+                <img src="/python_trader/images/exploration/" 
+                     alt="">
                 <figcaption>
                   Figure - 
                 </figcaption>
