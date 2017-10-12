@@ -346,8 +346,21 @@ body {
 }
 
 figure {
+   padding: 5px;
+   display: table;
+}
+
+figure img {
+    display: block;
     width: 70%;
 }
+
+figcaption {
+    display: table-caption;
+    caption-side: bottom;
+    padding: 0 5px 5px;
+}​
+
 /*
 div.figure {
   float: left;
