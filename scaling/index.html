@@ -3,8 +3,10 @@ layout: default
 title: Stock Forecasting
 ---
 <div class="blurb">
-	      <h2>Feature Scaling</h2>
+	      <h1>Feature Scaling</h1>
 	      <p>
+                <br>
+                <br>
                 It is always useful to visualize and explore the data
                 before performing any modeling. We combine the exploration
                 and data scaling in this section. Scaling is very important 
@@ -22,6 +24,7 @@ title: Stock Forecasting
                 apparent high correlation, as the market is always tending towards an
                 overall increase, and all trends point this way. We will save examination
                 of trends for the analysis section.
+                <br>
 	      </p>
 
 
@@ -34,6 +37,7 @@ title: Stock Forecasting
                 of this distribution in Figure 1. Examining a few cases, we see
                 FDP is almost entirely contained within &plusmn 5%, whereas BA is
                 spread to within a &plusmn 10% range.
+                <br>
               </p>
 
               <figure>
@@ -48,10 +52,12 @@ title: Stock Forecasting
 
               <p>
                 <br>
+                <br>
                 With all these different distributions, it is useful to look at the
                 combination of these distribution, as we do in Figure 2. We wind up with
                 a normal distribution, with the bulk of the distribution falling within
                 that &plusmn 5%.
+                <br>
               </p>
 
               <figure>
@@ -64,12 +70,14 @@ title: Stock Forecasting
 
               <p>
                 <br>
+                <br>
                 The distribution of all the diff_co values show a clear normal
                 distribution. We perform a z-scaling on the normally distributed
                 data, as seen in Figure 3. The scaling performed is a custom scheme,
                 where we omit data points on the furthest extreme, and renormalize.
                 This is repeated until the new fits perform minimal change in the 
                 distribution.
+                <br>
               </p>
 
               <figure>
@@ -77,6 +85,8 @@ title: Stock Forecasting
                      alt="Rescaled difference between close and open">
                 <figcaption>
                   Figure 3 - Z-scaled distribution of diff_co, for all quotes.
+                <br>
+                <br>
                 </figcaption>
               </figure>
 
@@ -91,6 +101,8 @@ title: Stock Forecasting
                 values is exclusively negative by design, and skewed towards higher
                 diff_hl, as can be seen in Figure 4. We perform z-scaling
                 on the diff_hl, as can be seen in Figure 5.
+                <br>
+                <br>
               </p>
 
               <figure>
@@ -100,6 +112,7 @@ title: Stock Forecasting
                   Figure 4 - Histogram of the cumulative difference between daily high and 
                   low prices, for all quotes. The distribution is slightly skewed towards 
                   larger values.
+                <br>
                 </figcaption>
               </figure>
 
@@ -108,6 +121,8 @@ title: Stock Forecasting
                      alt="Z-scaling of diff_hl">
                 <figcaption>
                   Figure 5 - Z-scaled distribution of diff_hl. 
+                <br>
+                <br>
                 </figcaption>
               </figure>
 
@@ -115,11 +130,15 @@ title: Stock Forecasting
               
               <!-- momentum -->
 
+              <h3>Momentum</h3>
+
               <p>
                 The distribution of momentum, as with diff_co and diff_hl, varies greatly
                 depending on the company. This can be seen in Figure 6, which shows the 
                 3 day momentum of the percentage of the closing price (arguably the shortest 
-                possible momentum measurement). 
+                possible momentum measurement).
+                <br>
+                <br> 
               </p>
 
               <figure>
@@ -134,7 +153,9 @@ title: Stock Forecasting
 
               <p>
                 <br>
+                <br>
                 Again, we combine the momentum distributions (Figure 7) before z-scaling the data. 
+                <br>
               </p>
 
               <figure>
@@ -144,6 +165,8 @@ title: Stock Forecasting
                   Figure 7 - Cumulative 3 day momentum of all quotes. As with the diff features,
                   we see the cumulative distribution is normal in shape. For each momentum window, 
                   we use a different mean and standard deviation for the z-scaling.
+                <br>
+                <br>
                 </figcaption>
               </figure>
 
@@ -157,6 +180,8 @@ title: Stock Forecasting
                 the daily value relative to the 25 day mean bands. A value of 1 (-1) indicates the
                 daily close is at the upper (lower) band. As can be seen, there is typically a double 
                 peak in the distribution, with significant variation in the shape of those peaks.
+                <br>
+                <br>
               </p>
 
               <figure>
@@ -172,6 +197,7 @@ title: Stock Forecasting
 
               <p>
                 <br>
+                <br>
                 Combining these distributions, we see our first significantly non-normal 
                 distribution in Figure 9. We decide to use a unique scaling for the Bollinger
                 Bands, with uniform treatment for all band windows we utilize. We z-scale using
@@ -179,6 +205,7 @@ title: Stock Forecasting
                 was selected by calculating the standard deviation for the distribution, and modulating
                 the scaling value so roughly 95% of the data was within 2 standard deviations.
                 A non-traditional z-scaling, but more than sufficient to fill our scaling needs.
+                <br>
               </p>
 
               <figure>
@@ -187,13 +214,18 @@ title: Stock Forecasting
                 <figcaption>
                   Figure 9 - Cumulative distribution of multiple quotes' 25 day Bollinger Band
                   calculations.
+                <br>
+                <br>
                 </figcaption>
               </figure>
 
 
               <!-- RSI -->
 
+              <h3>Relative Strength Index</h3>
+
               <p>
+                <br>
                 The Relative Strength Index gives a measure of the total gains in the closing
                 price, relative to the total losses in the closing price, over a window of time.
                 The simple mathematical form of this is 
@@ -205,6 +237,7 @@ title: Stock Forecasting
                 Where A = average gains in window, and B = average losses in window. Due to the
                 nature of this definition, there is a hard cutoff at 0 and 1, with values typically
                 winding up around 0.5. We show a 15 day RSI in Figure 10 (typically 14 days is used).
+                <br>
               </p>
 
 
@@ -218,6 +251,7 @@ title: Stock Forecasting
               </figure>
 
               <p>
+                <br>
                 <br>
                 We combine the distributions in Figure 11, and the cumulative distribution almost 
                 resembles a normal distribution.
@@ -234,6 +268,8 @@ title: Stock Forecasting
                 <figcaption>
                   Figure 11 - Cumulative 15 day RSI for a selection of stocks. The distribution
                   almost looks like a skewed normal distribution, but this is not the case.
+                <br>
+                <br>
                 </figcaption>
               </figure>
 
@@ -241,6 +277,7 @@ title: Stock Forecasting
               <h3>Log Closing Price</h3>
 
               <p>
+                <br>
                 Finally, we perform another custom normalization for the base 10 logarithm
                 of the closing price. The closing price lies between $10 and $1000 for 
                 almost all common stocks, and for everything in our distribution. This places
@@ -248,6 +285,7 @@ title: Stock Forecasting
                 -1 and 1. With this I play more loosely, as this will most likely serve as 
                 a damping term, where more or less expensive prices lead to steeper or 
                 flatter trends.
+                <br>
               </p>
 
               <p>
