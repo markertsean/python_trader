@@ -31,4 +31,76 @@ title: Stock Forecasting
                 in the past, which may behave very differently.
               </p>
 
+
+              <h3>Model Selection and Tuning</h3>
+
+              <p>
+                The data was shuffled and split into an 80/20 training/test 
+                samples. The target variables were the percentage increase/decrease
+                in the rolling mean of the stock price for different day means. 
+                We used Python's scikit-learn package to generate our machine learning
+                algorithms, and tuned the hyperparameters of the estimators using
+                cross validation on different folds of the training data.
+              </p>
+
+              <p>
+                We decided to test several machine learning regressors for this project,
+                including SVM, Random Forest, Multi Layered Perceptron, a Bagging Regressor,
+                and finally an Adaboost Regressor. These were each selected for their potential
+                strengths with this kind of data. Support vectors tend to perform well
+                with large amounts of continuous data. A Random Forest may simulate the
+                way an investor may thing, comparing multiple traditional estimators to determine
+                a future trend. Similarly, neural nets have proved excellent at combining
+                a large amount of chaotic data to make accurate predictions, adding the 
+                Multi Layered Perceptron to our list. Bagging Regressors are another good choice
+                when dealing with noisy data, combing multiple other regressors. Finally,
+                Adaboost is an excellent choice for noisy data, adapting weights and repeatedly
+                refitting to provide better results.
+              </p>
+
+
+              <p>
+                We also considered implementing a model that included principle component
+                analysis. As many of our features only differed in the number of days
+                the variable was calculated over, there is huge overlap in the information
+                contained. We thus fit models with and without PCA implementation, 
+                reducing the dimensionality of the momentum variables from 5 to 2,
+                the Bollinger Band variables from 5 to 2, and the RSI variables from
+                2 to 1 (using a 90% threshold for information).
+              </p>
+
+              <p>
+                We further tested whether it would be worth attempting to predict the
+                rolling mean change, not the percent change.
+              </p>
+
+              <p>
+                For the initial model selection, we compared the predictions for the 
+                5 day and 15 day rolling means. This subset was chosen to be a simple
+                test of short and long term predictions. The mean square error of the
+                predictions, with PCA and non-percentage variations, can be seen in 
+                table 1.
+              </p>
+
+              <!-- Table of mse for different models and variations -->
+
+              <table>
+                <caption>
+                  Mean square errors for rolling mean predictions, for different machine
+                  learning models. The ordinary predictor uses a percent change, Abs 
+                  indicates an absolute change (dollar value), and PCA indicated the
+                  model used PCA for dimensionality reduction
+                </caption>
+                <tr>
+                  <th>N days Rolling Mean</th>
+                  <th>SVR     </th>                  <th>SVR, PCA</th>                  <th>SVR, Abs</th>                  <th>RFR     </th>                  <th>RFR, PCA</th>                 <th>RFR, Abs</th>                  <th>MLP     </th>                  <th>MLP, PCA</th>                  <th>MLP, Abs</th>                  <th>Bag     </th>                  <th>Bag, PCA</th>                  <th>Bag, Abs</th>                  <th>Ada     </th>                  <th>Ada, PCA</th>                  <th>Ada, Abs</th>
+                </tr>
+                <tr>
+                  <td>5 Day</td>                  <td>0.00145</td>                  <td>0.00133</td>                  <td>33.5</td>                  <td>0.00128</td>                  <td>0.00133</td>                  <td>27.4</td>                  <td>0.00135</td>                 <td>0.00141</td>                  <td>24.3</td>                  <td>0.00129</td>                  <td>0.00133</td>                  <td>25.5</td>                  <td>0.00125</td>                  <td>0.00130</td>                  <td>27.9</td>
+                </tr>
+                <tr>
+                  <td>15 Day</td>                  <td>0.00294</td>                  <td>0.00270</td>                  <td>81.8</td>                  <td>0.00273</td>                  <td>0.00265</td>                  <td>63.9</td>                  <td>0.00293</td>                  <td>0.00304</td>                  <td>64.2</td>                  <td>0.00275</td>                  <td>0.00270</td>                  <td>62.9</td>                  <td>0.00263</td>                  <td>0.00255</td>                  <td>64.3</td>
+                </tr>
+              </table>
+
 </div><!-- /.blurb -->
