@@ -1,0 +1,34 @@
+---
+layout: default
+title: Stock Forecasting
+---
+<div class="blurb">
+	      <h2>Training the Machine Learning Algorithms</h2>
+
+	      <p>
+                With our features generated and scaled, we are now free to begin
+                training different machine learning algorithms, and select
+                which to use for our final predictor. It is here that we implement
+                a fundamental, bad assumption: the trend in the closing stock
+                price is only dependent on the features we have selected, and no other
+                external factors. We make this assumption for simplicity, we are
+                trying to predict trends, not be able to nail down the exact stock
+                price after the third quarter earnings are announced, just before
+                the yearly trade show for a company. It is more of a tool that could
+                be used with that external model to make investing decisions.
+	      </p>
+
+              <p>
+                There are two important things that fall out of making this assumption,
+                in regards to training the algorithm. First, we are able to train
+                on all of our quote data over the full time window. Ordinarily with 
+                time series data, it is vital to train on the earliest data, and train
+                on the latest data. With our assumption, this goes away, since past
+                data is in the features we include, and we assume that information is
+                all we need to determine future trends. Second, as we can train on
+                the most recent data, we include the most recent data in the market, and
+                don't have to worry that our data is trained on markets from 2-10 years
+                in the past, which may behave very differently.
+              </p>
+
+</div><!-- /.blurb -->
