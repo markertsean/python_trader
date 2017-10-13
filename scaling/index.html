@@ -17,7 +17,7 @@ title: Stock Forecasting
               <p>
                 I focus in this section primarily on the distributions of the features,
                 rather than correlation or scatter plots between trends. Quote information
-                is incredibally noisy, and attempts at these lead to one of two things:
+                is incredibly noisy, and attempts at these lead to one of two things:
                 either plots showing little to no correlation due to daily noise, or 
                 apparent high correlation, as the market is always tending towards an
                 overall increase, and all trends point this way. We will save examination
@@ -32,7 +32,7 @@ title: Stock Forecasting
                 We will start with the percent difference between the closing and
                 opening price for the day, denoted diff_co. We display the histogram 
                 of this distribution in Figure 1. Examining a few cases, we see
-                FDP is almost entirely contained within &plusmn 5%, wheras BA is
+                FDP is almost entirely contained within &plusmn 5%, whereas BA is
                 spread to within a &plusmn 10% range.
               </p>
 
@@ -65,11 +65,11 @@ title: Stock Forecasting
               <p>
                 <br>
                 The distribution of all the diff_co values show a clear normal
-                distribution. We perfom a z-scaling on the normally distributed
+                distribution. We perform a z-scaling on the normally distributed
                 data, as seen in Figure 3. The scaling performed is a custom scheme,
                 where we omit data points on the furthest extreme, and renormalize.
                 This is repeated until the new fits perform minimal change in the 
-                distribtuion.
+                distribution.
               </p>
 
               <figure>
@@ -107,7 +107,7 @@ title: Stock Forecasting
                 <img src="/python_trader/images/exploration/diff_hl_short_scaled_sum.jpg"
                      alt="Z-scaling of diff_hl">
                 <figcaption>
-                  Figure 5 - Z-scaled distribtuion of diff_hl. 
+                  Figure 5 - Z-scaled distribution of diff_hl. 
                 </figcaption>
               </figure>
 
@@ -203,7 +203,7 @@ title: Stock Forecasting
                 <br>
                 <br>
                 Where A = average gains in window, and B = average losses in window. Due to the
-                nature of this definition, therre is a hard cutoff at 0 and 1, with values typically
+                nature of this definition, there is a hard cutoff at 0 and 1, with values typically
                 winding up around 0.5. We show a 15 day RSI in Figure 10 (typically 14 days is used).
               </p>
 
@@ -237,6 +237,18 @@ title: Stock Forecasting
                 </figcaption>
               </figure>
 
+
+              <h3>Log Closing Price</h3>
+
+              <p>
+                Finally, we perform another custom normalization for the base 10 logarithm
+                of the closing price. The closing price lies between $10 and $1000 for 
+                almost all common stocks, and for everything in our distribution. This places
+                the log between 1 and 3, so subtracting 1.5 puts most our log prices between
+                -1 and 1. With this I play more loosely, as this will most likely serve as 
+                a damping term, where more or less expensive prices lead to steeper or 
+                flatter trends.
+              </p>
 
               <p>
                 <br>
