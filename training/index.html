@@ -80,27 +80,124 @@ title: Stock Forecasting
                 test of short and long term predictions. The mean square error of the
                 predictions, with PCA and non-percentage variations, can be seen in 
                 table 1.
+                <br>
+                <br>
               </p>
 
               <!-- Table of mse for different models and variations -->
 
               <table>
                 <caption>
-                  Mean square errors for rolling mean predictions, for different machine
-                  learning models. The ordinary predictor uses a percent change, Abs 
-                  indicates an absolute change (dollar value), and PCA indicated the
+                  Table 1 - Mean square errors for rolling mean predictions, for different 
+                  machine learning models. The ordinary predictor uses a percent change, 
+                  Abs indicates an absolute change (dollar value), and PCA indicated the
                   model used PCA for dimensionality reduction
                 </caption>
                 <tr>
                   <th>N days Rolling Mean</th>
-                  <th>SVR     </th>                  <th>SVR, PCA</th>                  <th>SVR, Abs</th>                  <th>RFR     </th>                  <th>RFR, PCA</th>                 <th>RFR, Abs</th>                  <th>MLP     </th>                  <th>MLP, PCA</th>                  <th>MLP, Abs</th>                  <th>Bag     </th>                  <th>Bag, PCA</th>                  <th>Bag, Abs</th>                  <th>Ada     </th>                  <th>Ada, PCA</th>                  <th>Ada, Abs</th>
+                  <th>SVR     </th> <th>SVR, PCA</th> <th>SVR, Abs</th> 
+                  <th>RFR     </th> <th>RFR, PCA</th> <th>RFR, Abs</th>
+                  <th>MLP     </th> <th>MLP, PCA</th> <th>MLP, Abs</th>
+                  <th>Bag     </th> <th>Bag, PCA</th> <th>Bag, Abs</th>
+                  <th>Ada     </th> <th>Ada, PCA</th> <th>Ada, Abs</th>
                 </tr>
                 <tr>
-                  <td>5 Day</td>                  <td>0.00145</td>                  <td>0.00133</td>                  <td>33.5</td>                  <td>0.00128</td>                  <td>0.00133</td>                  <td>27.4</td>                  <td>0.00135</td>                 <td>0.00141</td>                  <td>24.3</td>                  <td>0.00129</td>                  <td>0.00133</td>                  <td>25.5</td>                  <td>0.00125</td>                  <td>0.00130</td>                  <td>27.9</td>
+                  <td>5 Day</td>
+                  <td>0.00145</td>                  <td>0.00133</td>                  <td>33.5</td>
+                  <td>0.00128</td>                  <td>0.00133</td>                  <td>27.4</td>
+                  <td>0.00135</td>                  <td>0.00141</td>                  <td>24.3</td>
+                  <td>0.00129</td>                  <td>0.00133</td>                  <td>25.5</td>
+                  <td>0.00125</td>                  <td>0.00130</td>                  <td>27.9</td>
                 </tr>
                 <tr>
-                  <td>15 Day</td>                  <td>0.00294</td>                  <td>0.00270</td>                  <td>81.8</td>                  <td>0.00273</td>                  <td>0.00265</td>                  <td>63.9</td>                  <td>0.00293</td>                  <td>0.00304</td>                  <td>64.2</td>                  <td>0.00275</td>                  <td>0.00270</td>                  <td>62.9</td>                  <td>0.00263</td>                  <td>0.00255</td>                  <td>64.3</td>
+                  <td>15 Day</td>                  
+                  <td>0.00294</td>                  <td>0.00270</td>                  <td>81.8</td>
+                  <td>0.00273</td>                  <td>0.00265</td>                  <td>63.9</td>
+                  <td>0.00293</td>                  <td>0.00304</td>                  <td>64.2</td>            
+                  <td>0.00275</td>                  <td>0.00270</td>                  <td>62.9</td>
+                  <td>0.00263</td>                  <td>0.00255</td>                  <td>64.3</td>
                 </tr>
               </table>
+
+              <p>
+                <br>
+                <br>
+                Looking at the table, there is no clear benefit from including PCA to
+                our pipeline. Without an added benefit, we chose to omit PCA, to include
+                as much information as possible, and decrease data reduction time.
+                Less obvious, is whether or not the absolute change in rolling mean provides
+                different results than a percent change in rolling mean. A percent change
+                is easy to interpret as MSE, however prices can vary wildly, making a MSE
+                of say, $25.5, harder to interpret. A few percent MSE seems smaller than
+                a thirty dollar MSE, but let's examine the results in more detail.
+              </p>
+
+              <p>
+                Generally, Adaboost demonstrated the best performance, followed by the Bagging 
+                regressor, then the Random Forest. Figure 1 shows the predicted 15 day percentage 
+                increase, as a function of the true 15 day percentage increase, for our test
+                dataset. They all demonstrate the same general trends, over predicting the 
+                downward trends, and under predicting the upward trends, but overall much of the 
+                variability is captured. Figure 2 shows the same data, but for the models predicting
+                absolute changes in the predicted price. Clearly, these algorithms fail, so 
+                we will utilize the percent change model. Specifically, we will adopt the 
+                Adaboost regressor, which scored the best for both the 5 and 15 day tests.
+                <br>
+                <br>
+              </p>
+
+              <!--Images of rolling mean predictions-->
+
+              <figure>
+                <img src="/python_trader/images/training/rolling_mean_15_nopca.jpg" 
+                     alt="Predictions of 15 day rolling mean percent changes">
+                <figcaption>
+                  Figure 1 - Prediction of the percent change in the 
+                  15 day rolling mean for our three best regressors.
+                  There is a clear skew in the predicted values as a function of the true
+                  values.
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/training/rolling_mean_15_nopca.jpg" 
+                     alt="Predictions of 15 day rolling mean absolute changes">
+                <figcaption>
+                  Figure 2 - Prediction of the absolute change in the 15 day 
+                  rolling mean for our three best regressors. Predicting the absolute 
+                  change clearly is not an option.
+                </figcaption>
+              </figure>
+
+
+              <p>
+                <br>
+                <br>
+                One may be inclined to fit a linear regression on the results in Figure 1,
+                and transform the results so they fit on a 1:1 line. This is would however
+                result in worse performance of our algorithm. To understand why, we plot in
+                Figure 3 the difference in the predicted percent change and true percent
+                change, as a function of the predicted change for the 15 day mean. There is
+                clear symmetry in the uncertainty, a symmetry that is necessary to have unbiased
+                results, as we are assuming the predicted value as the true value. If we 
+                attempted further transform, it would skew this error, and lead to biased results.
+              </p>
+
+              <!-- Image of pred-true -->
+
+              <figure>
+                <img src="/python_trader/images/training/rolling_mean_15_diff_nopca.jpg" 
+                     alt="Difference in predicted change vs true change">
+                <figcaption>
+                  Figure 3 - Difference between the predicted percent change, and the
+                  true percent change.
+                </figcaption>
+              </figure>
+
+              <p>
+                <br>
+                <a href="/python_trader/interpolation">Next up: Interpolating Rolling Means</a>
+              </p>
+              
 
 </div><!-- /.blurb -->
