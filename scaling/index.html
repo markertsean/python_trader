@@ -191,6 +191,53 @@ title: Stock Forecasting
               </figure>
 
 
+              <!-- RSI -->
+
+              <p>
+                The Relative Strength Index gives a measure of the total gains in the closing
+                price, relative to the total losses in the closing price, over a window of time.
+                The simple mathematical form of this is 
+                <br>
+                <br>
+                RSI = 1 - 1 / ( 1 + A / B )
+                <br>
+                <br>
+                Where A = average gains in window, and B = average losses in window. Due to the
+                nature of this definition, therre is a hard cutoff at 0 and 1, with values typically
+                winding up around 0.5. We show a 15 day RSI in Figure 10 (typically 14 days is used).
+              </p>
+
+
+              <figure>
+                <img src="/python_trader/images/exploration/rsi_15_short.jpg" 
+                     alt="15 day RSI distribution">
+                <figcaption>
+                  Figure 10 - 15 day RSI for a selection of stocks. Most distributions peak 
+                  around 0.5.
+                </figcaption>
+              </figure>
+
+              <p>
+                <br>
+                We combine the distributions in Figure 11, and the cumulative distribution almost 
+                resembles a normal distribution.
+                Like the Bollinger Bands, this requires a unique normalization. We could perform
+                a min-max normalization, bringing the distribution from -1 to 1, but given the 
+                shape of the distribution it seems appropriate to perform another custom z-scaling.
+                Fitting 95% in two sigma, we use a mean of 0.5 and standard deviation of 0.2 to
+                z-scale all RSI features.
+              </p>
+
+              <figure>
+                <img src="/python_trader/images/exploration/rsi_15_short_sum.jpg" 
+                     alt="Cumulative 15 day RSI">
+                <figcaption>
+                  Figure 11 - Cumulative 15 day RSI for a selection of stocks. The distribution
+                  almost looks like a skewed normal distribution, but this is not the case.
+                </figcaption>
+              </figure>
+
+
               <p>
                 <br>
                 <a href="/pca">Next up: Principle Component Analysis</a>
