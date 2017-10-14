@@ -3,19 +3,53 @@ layout: default
 title: Stock Forecasting
 ---
 <div class="blurb">
-	      <h2>Format:</h2>
+	      <h2>Stock Price Forecasting</h2>
 	      <p>
-                Main page, start with talking about project
-
-                Data selection/cleaning
-
-                Feature selection, Momentum, Bollinger bands, RSI
-
-                Normalization
-
-                Different ML algorithms, scoring
-
-                Analysis on training data
+                This project's goal is to be able to reasonably forecast the closing
+                price of any stock. This is obviously an ambitious goal that nobody
+                has done even remotely close to perfect, but predictive modeling
+                is widespread for use in trading stocks. I do not expect to match
+                a model designed by a dedicated team, but hope to be able to predict
+                trends with modest accuracy.
 	      </p>
+
+              <p>
+                I approach this problem by attempting to predict rolling means of the closing
+                price, which wipe out traditionally noisy daily closing values. From rolling
+                means, it's possible to approximate the value of closing prices.
+              </p>
+
+              <p>
+                The general process I take is as follows:
+                <ol>
+                  <li>
+                    Clean the data, using techniques specific for how stocks may
+                    be adjusted over time.
+                  </li>
+                  <li>
+                    Generate features typical for stock forecasting, including 
+                    momentum, Bollinger Bands, and RSI, plus some custom features.
+                  </li>
+                  <li>
+                    Scale any features, so they are more friendly for our ML algorithms
+                  </li>
+                  <li>
+                    Train different machine learning algorithms, tuning hyperparameters
+                    via cross validation, and select the best performing model
+                  </li>
+                  <li>
+                    Fill in predicted values from our predicted rolling means by interpolating
+                    between the rolling means
+                  </li>
+                  <li>
+                    Analyze results using an external dataset
+                  </li>
+                </ol>
+              </p>
+
+              <p>
+                To explore the process, click anywhere on the left hand menu, or 
+                start right here with <a href="/python_trader/cleaning">Data Cleaning</a>.
+              </p>
 
 </div><!-- /.blurb -->
