@@ -64,7 +64,11 @@ cat_dict = {
                 'dd'  :'agri',    'farm':'agri',    'fdp' :'agri',    'gnc' :'agri',    'hes' :'ener',    'ibm' :'comp',    
                 'mas' :'cons',    'mcd' :'food',    'mon' :'agri',    'msex':'wate',    'msft':'comp',    'nflx':'ente',    
                 'sbux':'food',    'strl':'cons',    'tgt' :'csmr',    'tsla':'ener',    'ups' :'tran',    'xom' :'ener',    
-                'xpo' :'tran',    'vmc' :'cons'
+                'xpo' :'tran',    'vmc' :'cons',
+                'ge'  :'ener',
+                'kmb' :'heal',
+                'mmm' :'csmr',
+                'mu'  :'comp'
             }
 # Generate all the data, and scale it
 def get_scaled_data( inpList, roll_n, mom_n, rsi_n, band_n, close_percentage=True ):
