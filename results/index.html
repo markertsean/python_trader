@@ -6,17 +6,163 @@ title: Stock Forecasting
 	      <h2>Results</h2>
 
               <p>
-                foo
+                With the interpolation scheme set up, we are now able to predict
+                the closing price for days between our rolling mean predictions, and
+                compare the results with the actual closing price.
               </p>
 
               <p>
+                We start by predicting the rolling means of four new stock quotes
+                we did not train on, GE, KMB, MMM, and MU. These represent diversity
+                in both industry and prices. We show a mixture of results in 
+                Figures 1-5, for different stocks, timeframes, and rolling means.
+                Note the individual scales in the left panel vary by plot, but 
+                all of the fractional differences share the same scale.
                 <br>
-                <a href="/python_trader/results">Next up: Results</a>
+                <br>
+              </p>
+
+              <figure>
+                <img src="/python_trader/images/test/ge_rm_5.jpg" 
+                     alt="Predicted rolling mean">
+                <figcaption>
+                  Figure 1 - Left: The predicted 5 day GE rolling mean predictions (red), 
+                  overlaid on top of the true rolling mean (blue), and closing value (white). 
+                  Right: Difference between the predicted and true rolling mean.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/test/ge_rm_20.jpg" 
+                     alt="Predicted rolling mean">
+                <figcaption>
+                  Figure 2 - Left: The predicted 20 day GE rolling mean predictions (red), 
+                  overlaid on top of the true rolling mean (blue), and closing value (white). 
+                  Right: Difference between the predicted and true rolling mean.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/test/kmb_rm_5.jpg" 
+                     alt="Predicted rolling mean">
+                <figcaption>
+                  Figure 3 - Left: The predicted 5 day KMB rolling mean predictions (red), 
+                  overlaid on top of the true rolling mean (blue), and closing value (white). 
+                  Right: Difference between the predicted and true rolling mean.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/test/mmm_rm_10.jpg" 
+                     alt="Predicted rolling mean">
+                <figcaption>
+                  Figure 4 - Left: The predicted 10 day MMM rolling mean predictions (red), 
+                  overlaid on top of the true rolling mean (blue), and closing value (white). 
+                  Right: Difference between the predicted and true rolling mean.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+              <figure>
+                <img src="/python_trader/images/test/mu_rm_20.jpg" 
+                     alt="Predicted rolling mean">
+                <figcaption>
+                  Figure 5 - Left: The predicted 20 day MU rolling mean predictions (red), 
+                  overlaid on top of the true rolling mean (blue), and closing value (white). 
+                  Right: Difference between the predicted and true rolling mean.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+              <p>
+                <br>
+                <br>
+                The results are mixed, there is clear noise in the predictions, and the
+                magnitude of the effect is dependent on the magnitude of the closing price.
+                We use the fractional difference for most of our error analysis, as the 
+                price variation across 10 years will induce a bias. For example, if 10 years
+                ago the price was $20 with variations on the scale of $1, that is larger
+                than a $200 stock with relative change of $1. An absolute variation of $1
+                is significantly less of a return in the later case, hence the preference for
+                the fractional change. Both are nonetheless good metrics.
+              </p>
+
+              <p>
+                The fractional mean squared error is shown in Figure 6, averaged for each day
+                over all predictions. We see for KBM and MMM, the fraction mean squared error 
+                is quite good. Even thirty days out, the FMSE<0.03, considering the simplicity
+                of our algorithm and poor assumptions, this is an excellent result. Even for
+                GE, with a FMSE that increases more quickly after 15 days, we see a fair 
+                value for FMSE. The behavior of the FMSE for MU is significantly worse, with the 
+                error skyrocketing above the others to extremely high values.
+              </p>
+
+              <figure>
+                <img src="/python_trader/images/test/fmse_ge_kbm_mmm_mu.jpg" 
+                     alt="Fractional Mean Square Error">
+                <figcaption>
+                  Figure 6 - Fractional mean squared error as a function of predicted day.
+                  While three stocks behave relatively well with low FMSE at all values,
+                  MU shows rapidly increasing values with further out predictions.
+                </figcaption>
+              </figure>
+
+              <p>
+                We show the absolute standard deviation of the price in Figure 7. The
+                standard deviation is the square root of the MSE. Here we see results that 
+                are at first glance, contradictory to what we saw in Figure 6. The high
+                fractional variation of mu but low standard deviation relative to other
+                quotes is due to this stock having a lower closing price than the others.
+                KMB and MMM however have higher relative prices, leading to lower fractional
+                MSE, even with their higher standard deviations. It is vital to consider both 
+                metrics when measuring the effectiveness of the ML algorithms.
+              </p>
+
+              <figure>
+                <img src="/python_trader/images/test/stdev_ge_kbm_mmm_mu.jpg" 
+                     alt="Fractional Mean Square Error">
+                <figcaption>
+                  Figure 7 - Standard Deviation as a function of predicted day.
+                  This absolute measurement demonstrates the unreliability of using 
+                  the predictor estimate long term trends.
+                </figcaption>
+              </figure>
+
+              <h3>Conclusion</h3>
+
+              <p>
+                In conclusion, we generates a machine learning algorithm, that predicts
+                future changes in rolling means using traditional stock predictors and 
+                indicators. We unfold the predicted rolling means to interpolate values
+                between our predictions. Predictions of the values tested on independent 
+                stock quotes demonstrate fairly good predictive power for some stocks, for
+                short term predictions, but overall there is large variation that makes
+                our algorithm unreliable for long term forecasting.
+              </p>
+
+              <p>
+                While unreliable for forecasting, given the simplicity of the model and
+                poor assumptions we intentionally made, and the the difficulty of predicting closing 
+                stocks prices and their high volatility, I am very happy with the model performance.
+                There is lots of room for the improvements, and this is a model I intend
+                on updating with time.
+              </p>
+
+              <p>
+		<a href="/python_trader">Back to Project Home</a>
               </p>
               
 <!--
               <figure>
-                <img src="/python_trader/images/aapl_pred_means/" 
+                <img src="/python_trader/images/test/" 
                      alt="">
                 <figcaption>
                   Figure - 
