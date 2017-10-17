@@ -89,14 +89,45 @@ title: Stock Forecasting
                 magnitude of the effect is dependent on the magnitude of the closing price.
                 We use the fractional difference for most of our error analysis, as the 
                 price variation across 10 years will induce a bias. For example, if 10 years
-                ago the price was $20 with variations on the scale of $1, that is larger
-                than a $200 stock with relative change of $1. An absolute variation of $1
+                ago the price was $20 with variations on the scale of $1, that is larger swing
+                than a $200 stock with a change of $1. An absolute variation of $1
                 is significantly less of a return in the later case, hence the preference for
                 the fractional change. Both are nonetheless good metrics.
               </p>
 
               <p>
-                The fractional mean squared error is shown in Figure 6, averaged for each day
+                We show different metrics for the difference between the predicted rolling 
+                means and true rolling means in Figure 6.
+                The easiest to interpret is the standard deviation, where 1 standard deviation
+                contains roughly 68% of the data. That means for MU at 30 days, 68% of the
+                predictions fall roughly within a dollar of the true rolling mean. MMM by this
+                point appears worse, with a 3 dollar difference. If we look at the standard
+                deviation using percentage differences, for MU we see that this actually constitutes
+                almost a 9% difference in price, which is a poor predictor, whereas for MMM
+                this is only a 3% difference.
+              </p>
+
+
+              <figure>
+                <img src="/python_trader/images/test/metrics.jpg" 
+                     alt="Different metrics for assessing accuracy">
+                <figcaption>
+                  Figure 6 - Different metrics for assessing the performance of our
+                  rolling mean predictions. The number of days the mean is taken over is
+                  the x axis. What matters most is the percentage standard deviations,
+                  as a large percent change leads to unreliable predictions.
+                <br> 
+                <br> 
+                </figcaption>
+              </figure>
+
+
+              <p>
+                <br> 
+                <br> 
+                We use the rolling mean predictions and our interpolation scheme to predict
+                daily values for our subset of test quotes.
+                The fractional mean squared error is shown in Figure 7, averaged for each day
                 over all predictions. We see for KBM and MMM, the fraction mean squared error 
                 is quite good. Even thirty days out, the FMSE<0.03, considering the simplicity
                 of our algorithm and poor assumptions, this is an excellent result. Even for
@@ -109,7 +140,7 @@ title: Stock Forecasting
                 <img src="/python_trader/images/test/fmse_ge_kmb_mmm_mu.jpg" 
                      alt="Fractional Mean Square Error">
                 <figcaption>
-                  Figure 6 - Fractional mean squared error as a function of predicted day.
+                  Figure 7 - Fractional mean squared error as a function of predicted day.
                   While three stocks behave relatively well with low FMSE at all values,
                   MU shows rapidly increasing values with further out predictions.
                 <br> 
@@ -118,7 +149,7 @@ title: Stock Forecasting
               </figure>
 
               <p>
-                We show the absolute standard deviation of the price in Figure 7. The
+                We show the absolute standard deviation of the price in Figure 8. The
                 standard deviation is the square root of the MSE. Here we see results that 
                 are at first glance, contradictory to what we saw in Figure 6. The high
                 fractional variation of mu but low standard deviation relative to other
@@ -132,7 +163,7 @@ title: Stock Forecasting
                 <img src="/python_trader/images/test/stdev_ge_kmb_mmm_mu.jpg" 
                      alt="Fractional Mean Square Error">
                 <figcaption>
-                  Figure 7 - Standard Deviation as a function of predicted day.
+                  Figure 8 - Standard Deviation as a function of predicted day.
                   This absolute measurement demonstrates the unreliability of using 
                   the predictor estimate long term trends.
                 <br> 
